@@ -6,12 +6,13 @@
 
         <div class="user">
             <span class="subtitle"><b>Bienvenido:</b> {{ Auth::user()->name }} {{ Auth::user()->lastname }}</span> <br>
-            <span class="subtitle"><b>Rol:</b> {{ getRoleUserArray(null, Auth::user()->role) }}</span>
+            <span class="subtitle"><b>Rol:</b> {{ getRoleUserArray(null, Auth::user()->role) }}</span>            
             <div class="salir">
-                Salir
-                <a href="{{url('/logout')}}" data-toogle="tooltrip" data-placement="top" title="Salir">
-                    <i class="fas fa-sign-out-alt"></i>
-                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <button class="badge bg-light text-dark" type="submit"><i class="fas fa-sign-out-alt"></i> Salir</button>
+                </form>
             </div>
         </div>
     </div>
