@@ -137,9 +137,11 @@ ini_set('max_execution_time', 0); ?>
                                             @endif
                                         @endif
 
-                                        @if(kvfj(Auth::user()->permissions, 'appointment_materials'))
-                                            <a href="#" data-action="borrar" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Borrar" ><i class="fas fa-trash"></i></a>  
-                                        @endif    
+                                        @if(kvfj(Auth::user()->permissions, 'appointment_delete'))
+                                            @if($a->status == '0')
+                                                <a href="#" data-action="borrar" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Borrar" ><i class="fas fa-trash"></i></a>  
+                                            @endif   
+                                        @endif   
                                     </div>
                                 </td>
                                 <td>
