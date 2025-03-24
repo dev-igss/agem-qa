@@ -1380,22 +1380,39 @@ class AppointmentController extends Controller
             'config' => $config
         ];
 
-        return view('admin.appointments.setting_holy_day', $data);
+        return view('admin.appointments.holy_days.setting_holy_day', $data);
     }
 
     public function postConfigHolyDays(Request $request){
         $config_holy_day = new SettingHolyDays();
+        $config_holy_day->name = $request->input('name');
         $config_holy_day->holy_day = $request->input('holy_day');
 
 
         if($config_holy_day->save()):
             $b = new Bitacora;
-            $b->action = "Creación de fecha festiva ";
+            $b->action = "Registro de Día Festivo ".$config_holy_day->name." ".\Carbon\Carbon::parse($config_holy_day->holy_day)->format('Y') ;
             $b->user_id = Auth::id();
             $b->save();
 
             return back()->with('messages', '¡Día festivo creado y guardado con exito!.')
                 ->with('typealert', 'success');
+        endif;
+    }
+
+    public function getSettingsHolyDaysDelete($id){
+        $date = SettingHolyDays::findorFail($id);
+
+
+        if($date->delete()):
+
+            $b = new Bitacora;
+            $b->action = "Eliminación de dia festivo ".$date->name." - ".$date->holy_day;
+            $b->user_id = Auth::id();
+            $b->save();
+
+            return back()->with('messages', '¡Día festivo eliminado con exito!.')
+            ->with('typealert', 'success');
         endif;
     }
 
@@ -1535,7 +1552,7 @@ class AppointmentController extends Controller
             $b->user_id = Auth::id();
             $b->save();
 
-            return back()->with('messages', '¡Cita eliminada con exito!.')
+            return redirect('/admin/citas')->with('messages', '¡Cita eliminada con exito!.')
             ->with('typealert', 'success');
         endif;
     }
