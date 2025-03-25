@@ -65,7 +65,11 @@
 
             @if(kvfj(Auth::user()->permissions, 'appointment_list'))
                 <li>
-                    <a href="{{ url('/admin/citas') }}" class="lk-appointment_list lk-appointment_add lk-appointment_materials lk-appointment_setting lk-appointment_calendar "><i class="fas fa-calendar-alt"></i> Citas</a>
+                    <a href="{{ url('/admin/citas/rx') }}" class="lk-appointment_rx lk-appointment_list lk-appointment_add lk-appointment_materials lk-appointment_setting lk-appointment_calendar "><i class="fas fa-calendar-alt"></i> Citas RX</a>
+                </li>
+
+                <li>
+                    <a href="{{ url('/admin/citas/umd') }}" class="lk-appointment_umd lk-appointment_list lk-appointment_add lk-appointment_materials lk-appointment_setting lk-appointment_calendar "><i class="fas fa-calendar-alt"></i> Citas UMD</a>
                 </li>
             @endif
 

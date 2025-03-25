@@ -13,12 +13,28 @@ class AppointmentController extends Controller
 {
 
 
-    public function getHome(){        
+    public function getAppointmentRx(){        
+        $today = Carbon::now()->format('Y-m-d');
+        $appointments = Appointment::with('details')->where('area',0)->where('date', $today)->get(); 
+        $app_rx = Appointment::where('date', $today)->where('area',0)->count();
+        
+
+        //return $app_rx;       
+
+        $data = [
+            'appointments' => $appointments,
+            'app_rx' => $app_rx,
+            
+        ];
+
+        return view('admin.appointments.appo_rx',$data);
+    }
+
+    public function getAppointmentUmd(){        
         $am = ['1','2','3','4','5','6','7','8','9','10','35','36','37','38','39','40','41','42','43','44','45','46','47','48']; 
         $pm = ['11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34'];
         $today = Carbon::now()->format('Y-m-d');
-        $appointments = Appointment::with('details')->where('date', $today)->get(); 
-        $app_rx = Appointment::where('date', $today)->where('area',0)->count();
+        $appointments = Appointment::with('details')->whereIn('area', [2,3,4])->where('date', $today)->get(); 
         $app_usg_am = Appointment::where('date', $today)
             ->where('area',2)->whereIn('schedule_id',$am)->count();
         $app_usg_pm = Appointment::where('date', $today)
@@ -36,7 +52,6 @@ class AppointmentController extends Controller
 
         $data = [
             'appointments' => $appointments,
-            'app_rx' => $app_rx,
             'app_usg_am' => $app_usg_am,
             'app_usg_pm' => $app_usg_pm,
             'app_mmo_am' => $app_mmo_am,
@@ -45,58 +60,106 @@ class AppointmentController extends Controller
             'app_dmo_pm' => $app_dmo_pm,
         ];
 
-        return view('admin.appointments.home',$data);
+        return view('admin.appointments.appo_umd',$data);
     }
 
     public function postAppointmentSearch(Request $request){ 
         $tipo_paciente = $request->input('type_patient');
         $paciente = $request->input('search_patient');
         $fecha = $request->input('search_date');
+        $tipo_cita = $request->input('type_appo');
+
         //$details_appointments = DetailAppointment::all();    
+        if($tipo_cita ==1):
+            if(!is_null($paciente)):
+                $paciente_r = Patient::where('type', $tipo_paciente)
+                        ->where(function($query) use ($paciente) {
+                            $query->where('affiliation','LIKE','%'.$paciente.'%')
+                                    ->orWhere('name','LIKE','%'.$paciente.'%')
+                                    ->orWhere('lastname','LIKE','%'.$paciente.'%');
+                        })
+                        ->first();
 
-        if(!is_null($paciente)){
-            $paciente_r = Patient::where('type', $tipo_paciente)
-                    ->where(function($query) use ($paciente) {
-                        $query->where('affiliation','LIKE','%'.$paciente.'%')
-                                ->orWhere('name','LIKE','%'.$paciente.'%')
-                                ->orWhere('lastname','LIKE','%'.$paciente.'%');
-                    })
-                    ->first();
-
-            if(!$paciente_r ):
-                return redirect('/admin/citas')->with('messages', '¡Paciente no existe!.') 
-                                                ->with('typealert', 'warning');
-            else:           
-                $appointments = Appointment::with('details')->where('patient_id', $paciente_r->id)
-                    ->get();
+                if(!$paciente_r ):
+                    return redirect('/admin/citas/rx')->with('messages', '¡Paciente no existe!.') 
+                                                    ->with('typealert', 'warning');
+                else:          
+                    $appointments = Appointment::with('details')->where('area', 0)->where('patient_id', $paciente_r->id)
+                        ->get();
+                endif;
             endif;
-        }
 
-        if(!is_null($fecha)){
-            $appointments = Appointment::with('details')->where('date', $fecha)
-                ->get();
-        }
-
-        if(!is_null($paciente) && !is_null($fecha)){
-            $paciente_r = Patient::where('type', $tipo_paciente)
-                    ->where(function($query) use ($paciente) {
-                        $query->where('affiliation','LIKE','%'.$paciente.'%')
-                                ->orWhere('name','LIKE','%'.$paciente.'%')
-                                ->orWhere('lastname','LIKE','%'.$paciente.'%');
-                    })
-                    ->first();
-
-            if(!$paciente_r ):
-                return redirect('/admin/citas')->with('messages', '¡Paciente no existe!.') 
-                                                ->with('typealert', 'warning');
-            else:           
-                $appointments = Appointment::with('details')->where('patient_id', $paciente_r->id)
-                    ->where('date', $fecha)
+            if(!is_null($fecha)):
+                $appointments = Appointment::with('details')->where('area', 0)->where('date', $fecha)
                     ->get();
             endif;
 
-            
-        }
+            if(!is_null($paciente) && !is_null($fecha)):
+                $paciente_r = Patient::where('type', $tipo_paciente)
+                        ->where(function($query) use ($paciente) {
+                            $query->where('affiliation','LIKE','%'.$paciente.'%')
+                                    ->orWhere('name','LIKE','%'.$paciente.'%')
+                                    ->orWhere('lastname','LIKE','%'.$paciente.'%');
+                        })
+                        ->first();
+
+                if(!$paciente_r ):
+                    return redirect('/admin/citas')->with('messages', '¡Paciente no existe!.') 
+                                                    ->with('typealert', 'warning');
+                else:           
+                    $appointments = Appointment::with('details')->where('area', 0)->where('patient_id', $paciente_r->id)
+                        ->where('date', $fecha)
+                        ->get();
+                endif;
+
+                
+            endif;
+        else:
+
+            if(!is_null($paciente)):
+                $paciente_r = Patient::where('type', $tipo_paciente)
+                        ->where(function($query) use ($paciente) {
+                            $query->where('affiliation','LIKE','%'.$paciente.'%')
+                                    ->orWhere('name','LIKE','%'.$paciente.'%')
+                                    ->orWhere('lastname','LIKE','%'.$paciente.'%');
+                        })
+                        ->first();
+
+                if(!$paciente_r ):
+                    return redirect('/admin/citas')->with('messages', '¡Paciente no existe!.') 
+                                                    ->with('typealert', 'warning');
+                else:   
+                    $appointments = Appointment::with('details')->whereIn('area', [2,3,4])->where('patient_id', $paciente_r->id)
+                        ->get();
+                endif;
+            endif;
+
+            if(!is_null($fecha)):
+                $appointments = Appointment::with('details')->whereIn('area', [2,3,4])->where('date', $fecha)
+                    ->get();
+            endif;
+
+            if(!is_null($paciente) && !is_null($fecha)):
+                $paciente_r = Patient::where('type', $tipo_paciente)
+                        ->where(function($query) use ($paciente) {
+                            $query->where('affiliation','LIKE','%'.$paciente.'%')
+                                    ->orWhere('name','LIKE','%'.$paciente.'%')
+                                    ->orWhere('lastname','LIKE','%'.$paciente.'%');
+                        })
+                        ->first();
+
+                if(!$paciente_r ):
+                    return redirect('/admin/citas')->with('messages', '¡Paciente no existe!.') 
+                                                    ->with('typealert', 'warning');
+                else:           
+                    $appointments = Appointment::with('details')->whereIn('area', [2,3,4])->where('patient_id', $paciente_r->id)
+                        ->where('date', $fecha)
+                        ->get();
+                endif;
+
+                
+            endif;
+        endif;
 
         //return $cita;
 
@@ -105,6 +168,7 @@ class AppointmentController extends Controller
             'tipo_paciente' => $tipo_paciente,
             'paciente' => $paciente,
             'fecha' => $fecha,
+            'tipo_cita' => $tipo_cita,
             //'details_appointments' => $details_appointments
         ];
 

@@ -20,13 +20,13 @@
                     </div>
 
                     <div class="inside">
-                        {!! Form::open(['url' => '/admin/bitacora/busqueda']) !!}
+                        <form method="POST" action="{{ url('/admin/bitacora/busqueda') }}">
+                            @csrf
                             <div class="input-group">
-                                {!! Form::text('search', $busqueda, ['class' => 'form-control', 'placeholder' => 'Realice una busqueda', 'required']) !!}
-                                {!! Form::submit('Buscar', ['class'=>'btn btn-primary']) !!}
-                                <a href="{{ url('/admin/bitacoras') }}" class="btn btn-info">Limpiar</a>
+                            <input type="text" class="form-control" name="search" placeholder="Realice una busqueda" required>
+                                <button class="btn btn-primary" type="submit">Buscar</button>    
                             </div>
-                        {!! Form::close() !!}
+                        </form>
                     </div>
 
                 </div>

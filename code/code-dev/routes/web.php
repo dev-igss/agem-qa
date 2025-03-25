@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\UnitsController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\AppointmentController;
+use App\Http\Controllers\Admin\BitacoraController;
+use App\Http\Controllers\Admin\ApiController;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 
@@ -32,8 +34,11 @@ Route::prefix('admin')->group(function () {
     //Dashboard
     Route::get('/dashboard', [DashboardController::class, 'getDashboard'])->name('admin_dashboard');
 
+    Route::get('/bitacoras', [BitacoraController::class, 'getBitacora'])->name('admin_dashboard');
+
     //Citas
-    Route::get('/citas', [AppointmentController::class, 'getHome'])->name('appointment_list');
+    Route::get('/citas/rx', [AppointmentController::class, 'getAppointmentRx'])->name('appointment_rx');
+    Route::get('/citas/umd', [AppointmentController::class, 'getAppointmentUmd'])->name('appointment_umd');
     Route::get('/cita/agregar', [AppointmentController::class, 'getAppointmentAdd'])->name('appointment_add');        
     Route::post('/cita/agregar', [AppointmentController::class, 'postAppointmentAdd'])->name('appointment_add');
     Route::post('/cita/busqueda', [AppointmentController::class, 'postAppointmentSearch'])->name('appointment_list');
@@ -53,6 +58,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/cita/configuracion', [AppointmentController::class, 'postConfigAppointment'])->name('appointment_setting');
     Route::get('/cita/configuracion/dias/festivos', [AppointmentController::class, 'getConfigHolyDays'])->name('appointment_setting');
     Route::post('/cita/configuracion/dias/festivos', [AppointmentController::class, 'postConfigHolyDays'])->name('appointment_setting');    
+    Route::get('/cita/configuracion/dias/festivos/{id}/borrar', [AppointmentController::class, 'getSettingsHolyDaysDelete'])->name('appointment_setting');
     Route::get('/cita/{id}/borrar', [AppointmentController::class, 'getAppointmentDelete'])->name('appointment_delete');
 
     //Units
@@ -121,4 +127,22 @@ Route::prefix('admin')->group(function () {
     Route::post('/usuario/{id}/solicitudes_fuera_de_tiempo', [UserController::class,'postUserRequestsOut'])->name('user_requests_out');
     Route::get('/usuario/cuenta/informacion',[UserController::class,'getAccountInfo'])->name('user_info');
     Route::post('/usuario/cuenta/cambiar/contrasena',[UserController::class,'postAccountChangePassword'])->name('user_change_password');
+
+    //Request Ajax 
+    Route::get('/agem/api/load/add/patient/{code}/{exam}', [ApiController::class,'getPatient']);
+    Route::get('/agem/api/load/add/patient/beneficiario/{code}/{exam}', [ApiController::class,'getPatientBeneficiario']);
+    Route::get('/agem/api/load/generate/code/{code}', [ApiController::class,'getCodePatient']);
+    Route::get('/agem/api/load/studies/{type}', [ApiController::class,'getStudies']);
+    Route::get('/agem/api/load/appointments/{date}/{area}', [ApiController::class,'getAppointments']);
+    Route::get('/agem/api/load/schedules/{date}/{area}', [ApiController::class,'getSchedule']);
+    Route::get('/agem/api/load/control/studies/{date}', [ApiController::class,'getStudiesControlDate']);
+    Route::get('/agem/api/load/holy/days/{date}', [ApiController::class,'getHolyDays']);
+    Route::get('/agem/api/load/schedules/change', [ApiController::class,'getScheduleChange']);
+    Route::get('/agem/api/load/appointments', [ApiController::class,'getAppointmentsView']);
+    Route::get('/agem/api/load/appointments/rx', [ApiController::class,'getAppointmentsViewRx']);
+    Route::get('/agem/api/load/appointments/umd', [ApiController::class,'getAppointmentsViewUmd']);
+    Route::get('/agem/api/load/services', [ApiController::class,'getServices']);
+    Route::get('/agem/api/load/consulta/medicos/{mes}/{year}', [ApiController::class,'getPruebaConsulta']);
+    Route::get('/agem/api/load/consulta/dias/festivos/{year}', [ApiController::class,'getHolyDays']);
+
 });

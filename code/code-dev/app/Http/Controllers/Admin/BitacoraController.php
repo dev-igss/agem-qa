@@ -5,17 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Models\Bitacora;
+use App\Models\Bitacora;
 use Validator, Carbon\Carbon;
 
 class BitacoraController extends Controller
 {
-    public function __Construct(){
-        $this->middleware('auth');
-        $this->middleware('IsAdmin');
-        $this->middleware('UserStatus');
-        $this->middleware('Permissions');
-    }
 
     public function getBitacora(){
         $today = Carbon::now()->format('Y-m-d');

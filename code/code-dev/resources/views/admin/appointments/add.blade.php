@@ -28,7 +28,7 @@
                     <div class="inside">   
 
                         <input type="hidden" class="form-control" name="patient_id" id="patient_id">
-                        <input type="hidden" class="form-control" name="type_exam" id="type_exam">
+                        <input type="hidden" class="form-control" name="type_exam" id="type_examp">
 
                         <label for="name" ><strong> Numero de Afiliacion: </strong></label>
                         <div class="input-group">
@@ -270,12 +270,12 @@
                                     <!-- Modal -->
 
                                     <div class="header" >
-                                        <h2 class="title"><i class="fa-solid fa-calendar-day"></i><strong> Listado de Citas Agendadas Este Día</strong></h2>
+                                        <h2 class="title"><i class="fas fa-calendar-day"></i><strong> Listado de Citas Agendadas Este Día</strong></h2>
                                     </div>
 
                                     <div class="inside">
                                         <div id="citas_agendadas_rx" style="display: none;">
-                                            <label for="name" ><strong> Control de Citas RX:</strong></label>
+                                            <label for="name" ><strong> Control de Citas RX:</strong></label> 
                                             <div class="input-group">
                                                 <span class="input-group-text" id="basic-addon1">AM</span>
                                                 <input type="text" class="form-control col-md-4" name="control_rx_am" id="control_rx_am" rows="1" readonly>

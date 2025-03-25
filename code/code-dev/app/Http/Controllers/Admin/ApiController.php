@@ -6,16 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-use App\Http\Models\SettingHolyDays, App\Http\Models\Patient, App\Http\Models\CodePatient, App\Http\Models\Appointment, App\Http\Models\ControlAppointment, App\Http\Models\DetailAppointment, App\Http\Models\Service, App\Http\Models\Studie, App\Http\Models\Schedule;
+use App\Models\SettingHolyDays, App\Models\Patient, App\Models\CodePatient, App\Models\Appointment, App\Models\ControlAppointment;
+use App\Models\DetailAppointment, App\Models\Service, App\Models\Studie, App\Models\Schedule;
 use Carbon\Carbon, DB;
 
 class ApiController extends Controller
 {
-    public function __Construct(){ 
-    	$this->middleware('auth');
-        $this->middleware('IsAdmin');
-    }
-
+   
     public function getPatient($code, $exam){
         $patient = Patient::where('affiliation', $code)
             ->orderBy('type', 'ASC')
@@ -330,7 +327,7 @@ class ApiController extends Controller
 
         //return $dia_festivo;
         return response()->json($dia_festivo);
-    }
+    } 
 
     public function getScheduleChange(){
         $horarios = Schedule::all();

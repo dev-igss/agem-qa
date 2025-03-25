@@ -134,7 +134,7 @@ class PapelXServicioDMOExport implements FromView, WithEvents, WithTitle
                     ->where('appointments.area', 4)
                     ->where('appointments.status', 3)
                     ->where('services.parent_id', 1)
-                    ->groupBy(DB::raw('Day(appointments.date)'), DB::raw('services.id'))
+                    ->groupBy(DB::raw('Day(appointments.date)'), DB::raw('services.id'), DB::raw('services.name'))
                     ->get();
 
 

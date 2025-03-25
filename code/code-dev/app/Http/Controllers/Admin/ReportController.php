@@ -257,9 +257,9 @@ class ReportController extends Controller
         return Excel::download(new EstadisticasMAMOExport($data), 'Reporte MAMO '.$month_in.' - '.$year.'.xlsx');
     }
 
-    public function postReportDMOEstadistica(Request $request){
+    public function postReportDMOEstadistica(Request $request){ 
         $mes = $request->get('month_dmo');
-        $month_in= getMonths(null, $mes);
+        $month_in = getMonths(null, $mes);
         $year = $request->get('year_dmo');
 
         /*$conteo_pacientes_coex = DB::table('details_appointments')

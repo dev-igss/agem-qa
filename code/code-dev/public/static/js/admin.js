@@ -1105,7 +1105,7 @@ function getDisponibilidadHorario(){
         var year = fecha[0]+fecha[1]+fecha[2]+fecha[3];
         var exam = document.getElementById('exam_b').value;
 
-        var url = base + '/admin/agem/api/load/consulta/dias/festivos/'+year;
+        var url = base + '/admin/agem/api/load/consulta/dias/festivos/'+fecha; 
         http.open('GET', url, true);
         http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
         http.send();
@@ -1113,16 +1113,15 @@ function getDisponibilidadHorario(){
             if(this.readyState == 4 && this.status == 200){
                 var data = this.responseText;
                 data = JSON.parse(data);
-
+                console.log(data);
 
                 //console.log(data.length);
 
                 /*let pueblo = data.find(x => x.Fecha == inputdate.value);
                 console.log(pueblo);*/
-                let pueblo = data.find(x => x.Fecha == inputdate.value);
                 //console.log(pueblo);
 
-                if (typeof pueblo === 'undefined') {
+                if (data === 0) {
                     document.getElementById("dia-festivo").style.display ='none';
                     var url2 = base + '/admin/agem/api/load/schedules/'+fecha+'/'+exam;
                     http.open('GET', url2, true);
@@ -1133,12 +1132,12 @@ function getDisponibilidadHorario(){
                             //console.log(data); 
                             var data = this.responseText;
                             data = JSON.parse(data);
-                            //console.log(data); 
+                            console.log(data); 
 
                             if('cant_citas' in data){
                                 if(data.cant_citas.length > 0){
                                     data.cant_citas.forEach( function(schedule, index){
-                                        if(schedule.total >= citas_configuradas){
+                                        if(schedule.total >= citas_configuradas){  
                                             for(i=1; i <= 18; i++){
                                                 //console.log(citas_configuradas);
                                                 if(exam == 0 || exam == 1){
@@ -1299,7 +1298,7 @@ function getDisponibilidadHorario(){
                     }   
                 }
                 
-                if (typeof pueblo !== 'undefined') {
+                if (data === 1) {
                     document.getElementById("dia-festivo").style.display ='block';
                     //console.log('Dia festivo: '+pueblo.Descripcion);
                     document.getElementById("alert-control-citas").style.display ='none';
