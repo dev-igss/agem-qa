@@ -336,7 +336,7 @@ class AppointmentController extends Controller
                     endif;
                 endforeach;
     
-                //return $emer_hosp;
+                //return $solicitante;
     
                 $appointment = new Appointment;
                 $appointment->patient_id = $idpatient;
@@ -394,7 +394,7 @@ class AppointmentController extends Controller
                                     endif;
                                 endif;                    
                             endforeach; 
-                        endif;                                          
+                        endif;            
                     elseif($area == 3):
                         if($emer_hosp == '1'):
                             
@@ -571,10 +571,12 @@ class AppointmentController extends Controller
 
                 $appointment->type = $appointments_type;
                 $appointment->area = $area;
+                $appointment->service_id = 0;
+                $appointment->study_id = 0;
                 $appointment->service = $solicitante;
                 $appointment->status = '0';    
     
-                //return $appointment;
+                //return $appointment->service;
                 $appointment->save();      
                 $patient_aux = Patient::findOrFail($idpatient);
                 $patient_aux->contact =  $request->get('contactp');
@@ -1616,7 +1618,7 @@ class AppointmentController extends Controller
             $b->user_id = Auth::id();
             $b->save();
 
-            return redirect('/admin/citas')->with('messages', '¡Cita eliminada con exito!.')
+            return back()->with('messages', '¡Cita eliminada con exito!.')
             ->with('typealert', 'success');
         endif;
     }

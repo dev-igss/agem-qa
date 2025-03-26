@@ -384,7 +384,7 @@
                         </div>
 
                         <div class="input-group mtop16">
-                            <button class="btn btn-primary mt-4" id="btn_agregar" type="submit">Agregar</button>
+                            <a class="btn btn-primary mt-4" style="color: white;" id="btn_agregar" >Agregar</a>
                         </div>
                     </div>
                 </div>
