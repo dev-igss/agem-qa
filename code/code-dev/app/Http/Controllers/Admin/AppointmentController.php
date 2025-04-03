@@ -1618,7 +1618,7 @@ class AppointmentController extends Controller
             $b->user_id = Auth::id();
             $b->save();
 
-            return back()->with('messages', '¡Cita eliminada con exito!.')
+            return redirect('/admin/citas/umd')->with('messages', '¡Cita eliminada con exito!.')
             ->with('typealert', 'success');
         endif;
     }
