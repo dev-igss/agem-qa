@@ -1341,7 +1341,7 @@ class AppointmentController extends Controller
 
         if($status == "1"):
             if($num_exp === 0):
-                return redirect('/admin/citas')->with('messages', '¡Asigne un numero de expediente primero!.')
+                return back()->with('messages', '¡Asigne un numero de expediente primero!.')
                     ->with('typealert', 'warning');  
             else:
                 
@@ -1366,7 +1366,7 @@ class AppointmentController extends Controller
             $b->user_id = Auth::id();
             $b->save();
 
-            return redirect('/admin/citas')->with('messages', '¡Estado de cita actualizado con exito!.')
+            return back()->with('messages', '¡Estado de cita actualizado con exito!.')
                 ->with('typealert', 'success');            
         endif;
     }
