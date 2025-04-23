@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function(){
     var btn_manual_code = document.getElementById('btn_manual_code');
     var btn_manual_code_patient_actual = document.getElementById('btn_manual_code_patient_actual');
     var btn_update_affiliation = document.getElementById('btn_update_affiliation');
-
+    var btn_patient_medi = document.getElementById('btn_patient_medi');
+    
     if(btn_add_patient_search){ 
         btn_add_patient_search.addEventListener('click', function(e){
             e.preventDefault();
@@ -119,6 +120,14 @@ document.addEventListener('DOMContentLoaded', function(){
         btn_update_affiliation.addEventListener('click', function(e){
             e.preventDefault();
             document.getElementById("div_update_affiliation").style.display = "block";
+        });
+    }
+
+    if(btn_patient_medi){
+        btn_patient_medi.addEventListener('click', function(e){
+            e.preventDefault();
+            //console.log("Prueba");
+            getVerificacionMedi();
         });
     }
 
@@ -1339,4 +1348,68 @@ function getDisponibilidadHorario(){
     });
 }
 
+function getVerificacionMedi(){
+    var url = 'https://servicios.igssgt.org/WServices/wsComunicacionMedi/wsComunicacionMedi.asmx/ConsultarAfiliado';
+    var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('POST', url, true);
+        
+    var user= 'wsComunicacion';
+    var password = 'Igss.ws2021';
+    var afiliacion = '2817830711202';
+
+    var sr = '<?xml version="1.0" encoding="utf-8"?>'+
+    '<soap:Envelope xmlns:xsi="http://www+w3+org/2001/XMLSchema-instance" xmlns:xsd="http://www+w3+org/2001/XMLSchema" xmlns:soap="http://schemas+xmlsoap+org/soap/envelope/">'+
+    '<soap:Body>'+
+        '<ConsultarAfiliado xmlns="http://tempuri+org/">'+
+        '<Usuario>'+user+'</Usuario>'+
+        '<Clave>'+password +'</Clave>'+
+        '<numeroafiliado>'+afiliacion+'</numeroafiliado>'+
+        '</ConsultarAfiliado>'+
+    '</soap:Body>'+
+    '</soap:Envelope>';
+
+    xmlhttp.onreadystatechange = function () {
+        
+          console.log(xmlhttp.statusText);          
+        
+      }
+
+      xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+      xmlhttp.setRequestHeader("SOAPAction", "http://tempuri.org/ConsultarAfiliado");
+      
+      
+      xmlhttp.send(sr);      
+
+
+      
+
+      /*response = xmlhttp.responseXML;
+        console.log(xmlhttp.responseText+ "  "+ response);*/
+
+
+        /*const xhr = new XMLHttpRequest();
+
+        xhr.open('POST', url, true);
+      
+        // Set mandatory headers
+        xhr.setRequestHeader('Content-Type', 'application/soap+xml; charset=utf-8');
+        xhr.setRequestHeader('SOAPAction', 'http://tempuri.org/ConsultarAfiliado'); // Replace with the appropriate SOAP action
+      
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              callback(null, xhr.responseXML);
+            } else {
+              callback(new Error('Request failed with status ' + xhr.status), null);
+            }
+          }
+        };
+      
+        xhr.onerror = function () {
+          callback(new Error('Network error'), null);
+        };
+      
+        xhr.send(sr);*/
+
  
+}

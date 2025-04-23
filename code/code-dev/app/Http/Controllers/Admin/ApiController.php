@@ -10,6 +10,9 @@ use App\Models\SettingHolyDays, App\Models\Patient, App\Models\CodePatient, App\
 use App\Models\DetailAppointment, App\Models\Service, App\Models\Studie, App\Models\Schedule;
 use Carbon\Carbon, DB;
 
+use Artisaninweb\SoapWrapper\SoapWrapper;
+
+
 class ApiController extends Controller
 {
    
@@ -415,6 +418,49 @@ class ApiController extends Controller
 
         //return $cant_citas;
         return response()->json($servicios);
+    }
+
+    public function pruebaConsultaApi(){
+        $url = 'https://servicios.igssgt.org/WServices/wsComunicacionMedi/wsComunicacionMedi.asmx/ConsultarAfiliado';
+        $usuario = 'wsComunicacion';
+        $password = 'Igss.ws2021';
+        $afiliado = '2817830711202';
+
+        // Construcción del XML SOAP
+        $soapRequest = 
+        '<?xml version="1.0" encoding="utf-8"?>'.
+'<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'.
+  '<soap:Body>'.
+    '<ConsultarAfiliado xmlns="http://tempuri.org/">'.
+      '<Usuario>'.$usuario.'</Usuario>'.
+      '<Clave>'.$password .'</Clave>'.
+      '<numeroafiliado>'.$afiliado.'</numeroafiliado>'.
+    '</ConsultarAfiliado>'.
+  '</soap:Body>'.
+'</soap:Envelope>';
+
+        try {
+           $response = Http::withHeaders([
+                'Content-Type' => 'application/soap+xml; charset=utf-8',
+                'Content-Length' => 'length',
+                'SOAPAction' => 'http://tempuri.org/ConsultarAfiliado',
+            ])->post(
+                $url,
+                $soapRequest
+            );
+
+            return response($response->body(), 200)->withHeaders([
+                'Content-Type' => 'application/soap+xml; charset=utf-8',
+                'Content-Length' => 'length'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Error al conectar con el servicio IGSS',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
     }
     
 }

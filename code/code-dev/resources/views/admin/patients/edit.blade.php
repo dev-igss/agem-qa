@@ -29,8 +29,9 @@
                             <input type="text" class="form-control col-md-2" value="{{getTypePatient(null, $patient->type)}}" name="type_patient_edit" readonly>
                             <input type="text" class="form-control" value="{{$patient->affiliation}}" name="affiliation" readonly>               
                             @if(kvfj(Auth::user()->permissions, 'patient_edit_affiliation'))
-                                <a href="#" class="btn btn-sm btn-primary " id="btn_update_affiliation" ><i class="fas fa-qrcode"></i> Actualizar</a>      
-                            @endif                      
+                                <a href="#" class="btn btn-sm btn-primary " id="btn_update_affiliation" ><i class="fas fa-qrcode"></i> Actualizar</a>    
+                            @endif         
+                            <a href="#" class="btn btn-sm btn-warning " id="btn_patient_medi" ><i class="fas fa-qrcode"></i> Verificar Medi</a>               
                         </div>
 
                         <div id="div_update_affiliation" style="display: none; margin-top: 5px;">

@@ -145,4 +145,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/agem/api/load/consulta/medicos/{mes}/{year}', [ApiController::class,'getPruebaConsulta']);
     Route::get('/agem/api/load/consulta/dias/festivos/{year}', [ApiController::class,'getHolyDays']);
 
+    Route::get('/agem/api/load/consulta/afiliacion/medi', [ApiController::class,'pruebaConsultaApi']);
+
 });
