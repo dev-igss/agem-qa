@@ -6,7 +6,7 @@
 
         <div class="panel shadow">
             <div class="header">
-                <h2 class="title"><i class="fas fa-chart-bar"></i> Estadísticas Rápidas</h2>
+                <h2 class="title"><i class="fas fa-chart-bar"></i><strong> Estadísticas Rápidas</strong></h2>
             </div>
         </div>
 
@@ -74,6 +74,10 @@
                                 <li>
                                     El sistema toma en cuenta los dias festivos, la jefatura del departamento de Radiologia sera la encargada de asignar los mismos.
                                     Tomar en cuenta que las unicas citas validas para estos dias son de Hospitalización o Emergencia.
+                                </li>
+                                <li>
+                                    Informar a los tecnicos que tienen problema de inicio de sesión, probar en esta nueva versión del sistema. En caso de seguir presentando
+                                    problemas que secretaria o jefatura envie un correo a ricardod.velasquez@igssgt.org, con los datos del tecnico.
                                 </li>
                             </ul>
                         </p>
