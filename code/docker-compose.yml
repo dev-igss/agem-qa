@@ -19,7 +19,7 @@ services:
    context: ./
    dockerfile: Dockerfile
   ports:
-   - 9900:80
+   - 9200:80
   volumes:
    - ./code-dev:/var/www
    - ./code-dev/public:/var/www/html
