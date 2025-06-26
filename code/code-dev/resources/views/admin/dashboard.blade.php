@@ -76,7 +76,7 @@
                                     Tomar en cuenta que las unicas citas validas para estos dias son de Hospitalización o Emergencia.
                                 </li>
                                 <li>
-                                    Informar a los tecnicos que tienen problema de inicio de sesión, probar en esta nueva versión del sistema. En caso de seguir presentando
+                                    Informar a los tecnicos que tienen problema de inicio de sesión, que intenten en esta nueva versión del sistema. En caso de seguir presentando
                                     problemas que secretaria o jefatura envie un correo a ricardod.velasquez@igssgt.org, con los datos del tecnico.
                                 </li>
                             </ul>
