@@ -56,7 +56,7 @@
 
         <div class="panel shadow">
             <div class="header">
-                <h2 class="title"><i class="fas fa-newspaper"></i>Noticias o Alertas del Sistema</h2>
+                <h2 class="title"><i class="fas fa-newspaper"></i><strong> Noticias o Alertas del Sistema</strong></h2>
             </div>
         </div>
 
@@ -66,13 +66,13 @@
                 <div class="panel shadow">
                     
                     <div class="inside">
-                        <p>
+                        <p style="font-size: 18px;">
                             <ul>
                                 <li>
                                     Para un mejor control de los módulos de citas, fueron separadas. Verifique en el menu el módulo de citas que desea acceder
                                 </li>
                                 <li>
-                                    El cita toma en cuenta los dias festivos, la jefatura del departamento de Radiologia sera la encargada de asignar los mismos.
+                                    El sistema toma en cuenta los dias festivos, la jefatura del departamento de Radiologia sera la encargada de asignar los mismos.
                                     Tomar en cuenta que las unicas citas validas para estos dias son de Hospitalización o Emergencia.
                                 </li>
                             </ul>
