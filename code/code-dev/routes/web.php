@@ -148,3 +148,17 @@ Route::prefix('admin')->group(function () {
     Route::get('/agem/api/load/consulta/afiliacion/medi', [ApiController::class,'pruebaConsultaApi']);
 
 });
+
+Route::get('/citas_del_dia_rx', 'PatientDayController@getPatientDayRx')->name('patient_day');
+Route::get('/citas_del_dia_umd/{filtrado}', 'PatientDayController@getPatientDayUmd')->name('patient_day');
+Route::get('/citas_abiertas/{filtrado}', 'PatientDayController@getPatientDayOpen')->name('patient_day');
+Route::get('/citas_del_dia/{id}/materiales', 'PatientDayController@getMaterials')->name('materials');
+Route::post('/citas_del_dia/materiales', 'PatientDayController@postMaterials')->name('materials'); 
+Route::get('/citas_del_dia/acciones/{id}/comentario/{text}', 'PatientDayController@getAppointmentComment')->name('materials'); 
+Route::get('/citas_del_dia/acciones/{id}/solicitud_reprogramacion', 'PatientDayController@getAppointmentReschedule')->name('materials'); 
+Route::get('/citas_del_dia/acciones/{id}/ausente_examen', 'PatientDayController@getAppointmentNot')->name('materials'); 
+Route::get('/citas_del_dia/acciones/{id}/agregar_estudio/{area}/{study}/{comment}', 'PatientDayController@getAppointmentAddExamen')->name('materials'); 
+
+//Request Ajax
+Route::get('/agem/api/load/name/study/{id}', 'ApiController@getStudyName');
+Route::get('/agem/api/load/name/study/all/{type}', 'ApiController@getStudy');
