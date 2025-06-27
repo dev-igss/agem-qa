@@ -153,7 +153,7 @@ Route::get('/citas_del_dia_rx', 'PatientDayController@getPatientDayRx')->name('p
 Route::get('/citas_del_dia_umd/{filtrado}', 'PatientDayController@getPatientDayUmd')->name('patient_day');
 Route::get('/citas_abiertas/{filtrado}', 'PatientDayController@getPatientDayOpen')->name('patient_day');
 Route::get('/citas_del_dia/{id}/materiales', 'PatientDayController@getMaterials')->name('materials');
-Route::post('/citas_del_dia/materiales', 'PatientDayController@postMaterials')->name('materials'); 
+Route::post('/citas_del_dia/materiales', 'PatientDayController@postMaterials')->name('materials');  
 Route::get('/citas_del_dia/acciones/{id}/comentario/{text}', 'PatientDayController@getAppointmentComment')->name('materials'); 
 Route::get('/citas_del_dia/acciones/{id}/solicitud_reprogramacion', 'PatientDayController@getAppointmentReschedule')->name('materials'); 
 Route::get('/citas_del_dia/acciones/{id}/ausente_examen', 'PatientDayController@getAppointmentNot')->name('materials'); 
