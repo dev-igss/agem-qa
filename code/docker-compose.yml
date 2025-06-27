@@ -2,6 +2,7 @@ version: '3.7'
 services:
  agem-qa-db:
   image: mysql:5.7
+  restart: unless-stopped
   environment:
    MYSQL_ROOT_PASSWORD: Igss.2025
    MYSQL_DATABASE: agem_qa
