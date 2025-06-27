@@ -324,7 +324,7 @@ class DashboardController extends Controller
            'citas_d_tec_g_dmo'=> $citas_d_tec_g_dmo ,
            'citas_ld_tec_g_dmo' => $citas_ld_tec_g_dmo ,
            'citas_m_tec_g_dmo' => $citas_m_tec_g_dmo,
-           'fecha_actual' => $today
+           'today' => $today
         ];
 
         return view('admin.dashboard',$data);
