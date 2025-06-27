@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Appointment, App\Http\DetailAppointment, App\Http\MaterialAppointment, App\Http\Bitacora, App\User;
+use App\Models\Appointment, App\Models\DetailAppointment, App\Models\MaterialAppointment, App\Models\Bitacora, App\User;
 use Carbon\Carbon,DateTime;
 
 class PatientDayController extends Controller
