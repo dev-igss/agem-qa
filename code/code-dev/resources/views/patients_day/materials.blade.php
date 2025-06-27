@@ -1,4 +1,4 @@
-@extends('master')
+ @extends('layouts.connect.master')
 @section('title','Materiales Utilizados')
 @section('content')
 

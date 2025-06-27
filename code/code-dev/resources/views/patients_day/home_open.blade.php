@@ -1,4 +1,4 @@
-@extends('master')
+ @extends('layouts.connect.master')
 @section('title','Citas Abiertas')
 @section('content')
 <section style="text-align: center;">
