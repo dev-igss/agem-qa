@@ -56,7 +56,7 @@
 
         <div class="panel shadow">
             <div class="header">
-                <h2 class="title"><i class="fas fa-newspaper"></i><strong> Noticias o Alertas del Sistema</strong></h2>
+                <h2 class="title"><i class="fas fa-newspaper"></i><strong> Noticias o Alertas del Sistema - {{$today}}</strong></h2>
             </div>
         </div>
 
