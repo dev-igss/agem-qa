@@ -1,4 +1,4 @@
- @extends('layouts.connect.master')
+ @extends('patients_day.master')
 @section('title','Citas del Día')
 @section('content')
 

@@ -1,4 +1,4 @@
- @extends('layouts.connect.master')
+ @extends('patients_day.master')
 @section('title','Citas del Día USG-MMO-DMO')
 <?php set_time_limit(0);
 ini_set("memory_limit",-1);
