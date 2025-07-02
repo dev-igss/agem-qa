@@ -4,9 +4,10 @@
 
 <div class="container-fluid">
     
+    <form method="POST" action="{{ url('/citas_del_dia/materiales') }}">
+    @csrf
 
-    {!! Form::open(['url'=>'/citas_del_dia/materiales']) !!}
-        {!! Form::hidden('appointmentid', $idappointment , ['class'=>'form-control', 'id'=> 'appointmentid' ]) !!}
+        <input type="hidden" class="form-control" name="appointmentid" value="{{$idappointment}}" id="appointmentid">
         <div class="row mtop16">
 
             <div class="col-md-4">
@@ -116,16 +117,16 @@
                             <div class="col-md-6">
                                 <label for="name" ><strong> Tecnico No.1:</strong></label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                                    {!! Form::text('ibm1', null, ['class'=>'form-control']) !!}                             
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span> 
+                                    <input type="text" class="form-control" name="ibm1">                        
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="name" ><strong> Tecnico No.2:</strong></label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                                    {!! Form::text('ibm2', null, ['class'=>'form-control']) !!}                             
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>   
+                                    <input type="text" class="form-control" name="ibm2">                        
                                 </div>
                             </div>
 
@@ -133,7 +134,7 @@
                         
                         <p><small style="font-size: 1.75em; color:red; font-weight: bold;" >¡Verifique los datos antes de guardar, estos no podrán ser modificados después.!</small></p>
                         <br>
-                        {!! Form::submit('Guardar', ['class'=>'btn btn-success']) !!}
+                        <button class="btn btn-success" type="submit">Guardar</button>
                     </div>
                 </div>                    
             </div>
@@ -143,7 +144,7 @@
             
 
         </div>
-    {!! Form::close() !!}
+    </form>
 </div>
 
 <script>
