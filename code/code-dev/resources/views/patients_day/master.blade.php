@@ -36,7 +36,7 @@
 			<div class="collapse navbar-collapse" id="navigationMain">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">
-						<a href="{{ url('#') }}" class="nav-link"><span> Sistema de Agenda Electronica MÃ©dica - IGSS</span></a>
+						<a href="{{ url('#') }}" class="nav-link"><span> Sistema de Agenda Electronica Medica - IGSS</span></a>
 					</li>
 					@if(!Auth::guest())
 						<li class="nav-item">
