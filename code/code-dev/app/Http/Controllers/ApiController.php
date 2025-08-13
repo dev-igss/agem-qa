@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Models\Patient, App\Http\Models\CodePatient, App\Http\Models\Appointment, App\Http\Models\Service, App\Http\Models\Studie;
+use App\Http\Patient, App\Http\CodePatient, App\Http\Appointment, App\Http\Service, App\Http\Studie;
 use Carbon\Carbon;
 
 class ApiController extends Controller
