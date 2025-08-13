@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\BitacoraController;
 use App\Http\Controllers\Admin\ApiController;
+use App\Http\Controllers\ApiController as ApiControllerExternan;
 use App\Http\Controllers\PatientDayController;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -161,5 +162,5 @@ Route::get('/citas_del_dia/acciones/{id}/ausente_examen', [PatientDayController:
 Route::get('/citas_del_dia/acciones/{id}/agregar_estudio/{area}/{study}/{comment}', [PatientDayController::class,'getAppointmentAddExamen'])->name('materials'); 
 
 //Request Ajax
-Route::get('/agem/api/load/name/study/{id}', [ApiController::class,'getStudyName']);
-Route::get('/agem/api/load/name/study/all/{type}', [ApiController::class,'getStudy']);
+Route::get('/agem/api/load/name/study/{id}', [ApiControllerExternan::class,'getStudyName']);
+Route::get('/agem/api/load/name/study/all/{type}', [ApiControllerExternan::class,'getStudy']);
