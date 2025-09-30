@@ -288,7 +288,7 @@
                 }
             });
 
-            var exp_prev = document.getElementById('exp_prev');
+            /*var exp_prev = document.getElementById('exp_prev');
             var generate_rx = document.getElementById('div_generate_code_rx');
             var manual_rx = document.getElementById('div_manual_code_rx');
             var generate_usg = document.getElementById('div_generate_code_usg');
@@ -326,7 +326,7 @@
                     manual_dmo.style.display = "none";
                     generate_dmo.style.display = "block";
                 }
-            });
+            });*/
 
 
         });
