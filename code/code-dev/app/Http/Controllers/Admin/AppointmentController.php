@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting, App\Models\SettingHolyDays, App\Models\Appointment, App\Models\ControlAppointment, App\Models\DetailAppointment, App\Models\MaterialAppointment;
 use App\Models\Patient, App\Models\CodePatient, App\Models\Service, App\Models\Studie, App\Models\Schedule, App\Models\Bitacora;
 use Validator, Str, Config, Auth, Session, DB, PDF, Response, Carbon\Carbon;
-
+ 
 class AppointmentController extends Controller
 {
 

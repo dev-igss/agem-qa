@@ -250,7 +250,7 @@ class PatientController extends Controller
             $p->name = e($request->input('name'));
             $p->lastname = e($request->input('lastname'));
             $p->unit_id = '1';
-            $p->exp_prev = e($request->input('exp_prev'));
+            //$p->exp_prev = e($request->input('exp_prev'));
             $p->age = $request->input('age');
             $p->birth = $request->input('birth'); 
             $p->gender = $request->input('gender');
