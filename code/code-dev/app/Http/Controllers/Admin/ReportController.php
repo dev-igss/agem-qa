@@ -224,8 +224,9 @@ class ReportController extends Controller
     }
 
     public function postReportMAMOEstadistica(Request $request){
+        return $request;
         $mes = $request->get('month_mamo');
-        $month_in= getMonths(null, $mes);
+        $month_in= getMonths(null, $mes); 
         $year = $request->get('year_mamo');
 
         /*$conteo_peliculas_10_12 = DB::table('details_appointments')
