@@ -101,7 +101,7 @@
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
-                                        <input type="number" class="form-control" value="{{\Carbon\Carbon::now()->format('Y')}}" name="month_mamo" min="2022" max="2099" step="1">
+                                        <input type="number" class="form-control" value="{{\Carbon\Carbon::now()->format('Y')}}" name="year_mamo" min="2022" max="2099" step="1">
                                         
                                     </div>
 
