@@ -224,7 +224,6 @@ class ReportController extends Controller
     }
 
     public function postReportMAMOEstadistica(Request $request){
-        return $request;
         $mes = $request->get('month_mamo');
         $month_in= getMonths(null, $mes); 
         $year = $request->get('year_mamo');
