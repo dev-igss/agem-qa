@@ -37,7 +37,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'getDashboard'])->name('admin_dashboard');
 
     Route::get('/bitacoras', [BitacoraController::class, 'getBitacora'])->name('bitacoras');
-    Route::post('/bitacora/busqueda', [BitacoraController::class, 'postBitacora'])->name('bitacoras');
+    Route::post('/bitacora/busqueda', [BitacoraController::class, 'postSearch'])->name('bitacoras');
 
     //Citas
     Route::get('/citas/rx', [AppointmentController::class, 'getAppointmentRx'])->name('appointment_rx');
