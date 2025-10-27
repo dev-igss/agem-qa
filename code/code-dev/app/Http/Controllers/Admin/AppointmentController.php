@@ -642,7 +642,7 @@ class AppointmentController extends Controller
                 $patient_new = new Patient;
                 $patient_new->unit_id = '1';
                 $patient_new->exp_prev = '0';
-                $patient_new->type = $request->input('type_patient_new');
+                $patient_new->type = '0';
                 $patient_new->affiliation = e($request->input('affiliationp'));
                 $patient_new->name = e($request->input('name_new'));
                 $patient_new->lastname = e($request->input('lastname_new'));
@@ -942,7 +942,7 @@ class AppointmentController extends Controller
                     if($appointment->save()):                 
                         
                         $b = new Bitacora;
-                        $b->action = "Registro de cita para paciente con afiliación: ".$patient_new->affiliation;
+                        $b->action = "Registro de cita de fecha ".$appointment->date." para paciente con afiliación: ".$patient_new->affiliation;
                         $b->user_id = Auth::id();
                         $b->save();
             

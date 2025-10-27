@@ -144,7 +144,7 @@
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             <input type="text" class="form-control" name="name_new" >
-                            <select name="type_patient_new" id="patient_type" class="form-select col-md-2" aria-label="Default select example">
+                            <select name="name_new" id="patient_type" class="form-select col-md-2" aria-label="Default select example">
                                     @foreach(getTypePatient('list', null) as $key => $value)
                                         
                                         <option value="{{ $key }}">{{ $value }}</option>
@@ -179,7 +179,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                                     <input type="text" class="form-control" name="age_new">
-                                </div>
+                                </div> 
                             </div>
                         </div>
 
