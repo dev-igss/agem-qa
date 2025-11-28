@@ -77,7 +77,7 @@
                                             <label for="module" class="mtop16"><strong>Tipo de Usuario:</strong></label>
                                             <div class="input-group">
                                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-layer-group"></i></span>
-                                                <select class="form-select" aria-label="Default select example">
+                                                <select name="role" class="form-select" aria-label="Default select example">
                                                         <option value="0">Administrador General</option>
                                                         <option value="1">Administrador</option>
                                                         <option value="2">Encargado de Área</option>
