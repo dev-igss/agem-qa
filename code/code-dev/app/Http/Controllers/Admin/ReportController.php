@@ -152,6 +152,45 @@ class ReportController extends Controller
     }
 
     public function postReportRXEstadistica(Request $request){
+
+
+        $mes = $request->get('month_rx');
+        $year = $request->get('year_rx');
+
+        // DEBUG: Verifica que estos valores sean lo que esperas (ej: "3" y "2026")
+        // dd($mes, $year); 
+
+        /*$datos = DB::table('details_appointments')
+            ->select(
+                DB::raw('Day(appointments.date) AS dia'),
+                'services.id AS idservicio',
+                DB::raw('COUNT(DISTINCT appointments.patient_id) AS total_pacientes')
+            )
+            ->join('appointments', 'appointments.id', '=', 'details_appointments.idappointment')
+            ->join('services', 'services.id', '=', 'details_appointments.idservice')
+            ->whereMonth('appointments.date', $mes) // Usa directamente $mes
+            ->whereYear('appointments.date', $year)
+            ->where('appointments.status', 3)
+            ->where('services.status', 1)
+            ->groupBy('appointments.date', 'services.id')
+            ->get();
+
+        $datos = DB::table('details_appointments')
+            ->select(
+                'appointments.date',
+                'appointments.patient_id',
+                'appointments.service_id'
+            )
+            ->join('appointments', 'appointments.id', '=', 'details_appointments.idappointment')
+            ->whereMonth('appointments.date', 0) // Usa directamente $mes
+            ->whereYear('appointments.date', 2026)
+            ->where('appointments.status', 3)
+            ->where('appointments.area', 0)
+            ->get();
+
+
+        return $datos;*/
+
         $mes = $request->get('month_rx');
         $month_in= getMonths(null, $mes);
         $year = $request->get('year_rx');
