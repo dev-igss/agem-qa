@@ -18,7 +18,7 @@ class UserController extends Controller
             break;
 
             case 2:
-                $users = User::whereIn('role', ['4', '5'])->where('id', '<>' ,'1')->where('id', '<>' ,'2')->where('id', '<>' ,'3')->where('id', '<>' ,'4')->where('id', '<>' ,'36')->get();
+                $users = User::whereIn('role', ['3','4', '5'])->where('id', '<>' ,'1')->where('id', '<>' ,'2')->where('id', '<>' ,'3')->where('id', '<>' ,'4')->where('id', '<>' ,'36')->get();
             break;
 
             case 3:
