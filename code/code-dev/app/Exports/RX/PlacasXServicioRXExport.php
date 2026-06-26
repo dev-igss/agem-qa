@@ -1,0 +1,227 @@
+<?php
+
+namespace App\Exports\RX;
+
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\Protection;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use App\Models\Service;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
+class PlacasXServicioRXExport implements FromView, WithEvents, WithTitle
+{
+    public $mes;
+    public $year;
+    private $currentRow = 3; 
+
+    public function __construct($mes, $year)
+    {
+        $this->mes = $mes;
+        $this->year = $year;
+    }
+
+    public function view(): View
+    {
+        return view('admin.appointments.reports.prueba', ['data' => []]);
+    }
+
+    public function title(): string
+    {
+        return 'Placas x Servicio';
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
+                
+                // 1. Configuración de Columnas
+                $columnas_datos = [];
+                for ($i = 0; $i < 31; $i++) {
+                    $columnas_datos[] = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i + 2);
+                }
+                $colTotal = 'AG';
+
+                // Estilos de Encabezado
+                $sheet->getColumnDimension('A')->setWidth(250, 'px');
+                $sheet->mergeCells('B1:AF1');
+                $sheet->setCellValue('A1', 'PLACAS POR SERVICIO');
+                $sheet->setCellValue('A2', 'Días');
+                $sheet->getStyle('A1:AG2')->getFont()->setBold(true);
+                $sheet->getStyle('A1:AG2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+                foreach ($columnas_datos as $index => $col) {
+                    $sheet->getColumnDimension($col)->setWidth(35, 'px');
+                    $sheet->setCellValue($col . '2', $index + 1);
+                }
+                $sheet->setCellValue($colTotal . '2', 'TOTAL');
+
+                // 2. Definición de Secciones Dinámicas
+                $secciones = [
+                    ['titulo' => 'HOSPITALIZACIÓN', 'parent_id' => 1],
+                    ['titulo' => 'CONSULTA EXTERNA', 'parent_id' => 2],
+                    ['titulo' => 'EMERGENCIAS', 'parent_id' => 3],
+                    ['titulo' => 'SERVICIOS A OTRAS UNIDADES', 'id' => 63],
+                    ['titulo' => 'SERVICIOS DE APOYO', 'parent_id' => 4, 'exclude_id' => 63],
+                ];
+
+                $filasSubtotales = [];
+
+                foreach ($secciones as $sec) {
+                    // Título de Sección
+                    $sheet->setCellValue('A' . $this->currentRow, $sec['titulo']);
+                    $sheet->getStyle('A' . $this->currentRow . ':AG' . $this->currentRow)->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setRGB('E9E9E9');
+                    $sheet->mergeCells('A' . $this->currentRow . ':AG' . $this->currentRow);
+                    $sheet->getStyle('A' . $this->currentRow . ':AG' . $this->currentRow)->getFont()->setBold(true);
+                    $this->currentRow++;
+
+                    $startSectionRow = $this->currentRow;
+
+                    // --- CONSULTA DE SERVICIOS ACTIVOS DE LA SECCIÓN ---
+                    $query = Service::where('status', 1);
+
+                    if (isset($sec['id'])) $query->where('id', $sec['id']);
+                    if (isset($sec['parent_id'])) $query->where('parent_id', $sec['parent_id']);
+                    if (isset($sec['exclude_id'])) $query->where('id', '<>', $sec['exclude_id']);
+                    $servicios = $query->get();
+
+                    $activosIds = $servicios->pluck('id');
+
+                    // Servicios inactivos que apuntan (via id_cuadre) a algún activo de esta sección
+                    $inactivosIds = Service::where('status', 0)
+                        ->whereIn('id_cuadre', $activosIds)
+                        ->pluck('id');
+
+                    $todosIds = $activosIds->merge($inactivosIds);
+
+                    // --- CONSULTA DE DATOS ---
+                    // Los servicios inactivos se agrupan bajo su id_cuadre (servicio activo destino)
+                    $datos = DB::table('details_appointments')
+                        ->select(
+                            DB::raw('Day(appointments.date) AS dia'),
+                            DB::raw('CASE WHEN services.status = 0 THEN services.id_cuadre ELSE services.id END AS idservicio'),
+                            DB::raw('SUM(materials_appointments.amount) AS total')
+                        )
+                        ->join('appointments', 'appointments.id', '=', 'details_appointments.idappointment')
+                        ->join('materials_appointments', 'materials_appointments.idappointment', '=', 'details_appointments.idappointment')
+                        ->join('services', 'services.id', '=', 'details_appointments.idservice')
+                        ->whereMonth('appointments.date', $this->mes)
+                        ->whereYear('appointments.date', $this->year)
+                        ->where('appointments.status', 3)
+                        ->where('appointments.area', 0)
+                        ->whereIn('services.id', $todosIds)
+                        ->groupBy('dia', 'idservicio')
+                        ->get()
+                        ->groupBy('idservicio');
+
+                    foreach ($servicios as $srv) {
+                        $sheet->setCellValue('A' . $this->currentRow, $srv->name);
+                        
+                        if ($datos->has($srv->id)) {
+                            foreach ($datos[$srv->id] as $registro) {
+                                $col = $columnas_datos[$registro->dia - 1];
+                                $sheet->setCellValue($col . $this->currentRow, $registro->total);
+                            }
+                        }
+                        $sheet->setCellValue($colTotal . $this->currentRow, "=SUM(B{$this->currentRow}:AF{$this->currentRow})");
+                        $this->currentRow++;
+                    }
+
+                    // Fila de Subtotal
+                    $sheet->setCellValue('A' . $this->currentRow, 'SUB-TOTAL ' . $sec['titulo']);
+                    $sheet->getStyle('A' . $this->currentRow . ':AG' . $this->currentRow)->getFont()->setBold(true);
+                    
+                    foreach ($columnas_datos as $col) {
+                        $sheet->setCellValue($col . $this->currentRow, "=SUM({$col}{$startSectionRow}:{$col}" . ($this->currentRow - 1) . ")");
+                    }
+                    $sheet->setCellValue($colTotal . $this->currentRow, "=SUM(B{$this->currentRow}:AF{$this->currentRow})");
+                    
+                    $filasSubtotales[] = $this->currentRow;
+                    $this->currentRow += 2; 
+                }
+
+                // 3. Gran Total Final
+                $sheet->setCellValue('A' . $this->currentRow, 'TOTAL GENERAL');
+                $sheet->getStyle('A' . $this->currentRow . ':AG' . $this->currentRow)->getFont()->setBold(true);
+                foreach ($columnas_datos as $col) {
+                    $sumFormula = "=" . implode('+', array_map(fn($f) => "{$col}{$f}", $filasSubtotales));
+                    $sheet->setCellValue($col . $this->currentRow, $sumFormula);
+                }
+                $sheet->setCellValue($colTotal . $this->currentRow, "=SUM(B{$this->currentRow}:AF{$this->currentRow})");
+
+                $rowPlaca = $this->currentRow+2;
+
+
+                // 4. SECCIÓN TAMAÑO DE PLACAS (Consulta Maestra de Materiales)
+                $sheet->setCellValue('A'.$rowPlaca, 'PLACAS UTILIZADAS POR TAMAÑO');
+                $sheet->getStyle('A' . $rowPlaca . ':AG' . $rowPlaca)->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setRGB('E9E9E9');
+                $sheet->mergeCells('A' . $rowPlaca . ':AG' . $rowPlaca);
+                $sheet->getStyle('A' . $rowPlaca . ':AG' . $rowPlaca)->getFont()->setBold(true);
+                $materialesData = DB::table('materials_appointments')
+                    ->select('material', DB::raw('Day(appointments.date) as dia'), DB::raw('SUM(amount) as total'))
+                    ->join('appointments', 'appointments.id', '=', 'materials_appointments.idappointment')
+                    ->whereMonth('appointments.date', $this->mes)
+                    ->whereYear('appointments.date', $this->year)
+                    ->where('appointments.area', 0)
+                    ->where('appointments.status', 3)
+                    ->groupBy('material', 'dia')
+                    ->get()
+                    ->groupBy('material');
+
+                $rowPlaca++;
+                $labelsPlacas = [0 => '8*10', 1 => '10*12', 2 => '11*14', 3 => '14*17'];
+                $filasASumar = [];
+
+                foreach($labelsPlacas as $idMat => $label) {
+                    $sheet->setCellValue('A'.$rowPlaca, $label);
+                    $filasASumar[] = $rowPlaca;
+                    if($materialesData->has($idMat)) {
+                        foreach($materialesData->get($idMat) as $reg) {
+                            $sheet->setCellValue($columnas_datos[$reg->dia - 1].$rowPlaca, $reg->total);
+                        }
+                    }
+                    $sheet->setCellValue('AG'.$rowPlaca, "=SUM(B{$rowPlaca}:AF{$rowPlaca})");
+                    $rowPlaca++;
+                }
+
+                // 4. Gran Total Placas
+                $sheet->setCellValue('A' . $rowPlaca, 'TOTAL GENERAL PLACAS');
+                $sheet->getStyle('A' . $rowPlaca . ':AG' . $rowPlaca)->getFont()->setBold(true);
+                foreach ($columnas_datos as $col) {
+                    $sumFormula = "=" . implode('+', array_map(fn($f) => "{$col}{$f}", $filasASumar));
+                    $sheet->setCellValue($col . $rowPlaca, $sumFormula);
+                }
+                $sheet->setCellValue($colTotal . $rowPlaca, "=SUM(B{$rowPlaca}:AF{$rowPlaca})");
+
+                // 5. Estilos Finales
+                $rangoFinal = "A1:AG" . $this->currentRow;
+                $sheet->getStyle($rangoFinal)->applyFromArray([
+                    'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '000000']]],
+                    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
+                ]);
+
+                 $rangoFinal = "A".($this->currentRow+2).":AG" . $rowPlaca;
+                $sheet->getStyle($rangoFinal)->applyFromArray([
+                    'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '000000']]],
+                    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
+                ]);
+
+                $sheet->setShowGridlines(false);
+                $sheet->freezePane('B3');
+                $sheet->getProtection()->setSheet(true);
+                $sheet->getStyle('B1:AF1')->getProtection()->setLocked(Protection::PROTECTION_UNPROTECTED);
+            },
+        ];
+    }
+}

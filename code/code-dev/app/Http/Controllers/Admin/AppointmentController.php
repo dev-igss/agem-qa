@@ -177,7 +177,7 @@ class AppointmentController extends Controller
     }
 
     public function getAppointmentAdd(){
-        //$servicios_restringidos = ['75','78','79','80','82','83','84','87','88','89','94','95','96','97','98','99','100','101','102','103','104'];
+        $servicios_restringidos = ['75','78','79','80','82','83','84','87','88','89','94','95','96','97','98','99','100','101','102','103','104'];
         $services = Service::where('type','1')
             ->where('unit_id', '1')
             ->where('status', '1')
@@ -1374,7 +1374,7 @@ class AppointmentController extends Controller
                 ->with('typealert', 'success');            
         endif;
     }
- 
+
     public function getAppointmentInforme($id){
         $appointment = Appointment::findOrFail($id);
         $path = public_path('img/logo igss.jpg');

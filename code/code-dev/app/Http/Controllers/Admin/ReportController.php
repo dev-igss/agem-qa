@@ -9,7 +9,7 @@ use App\Models\Appointment, App\Models\DetailAppointment, App\Models\Service, Ap
 use DB, PDF, Auth, Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
-use App\Exports\EstadisticasDMOExport, App\Exports\EstadisticasMAMOExport, App\Exports\EstadisticasUSGExport, App\Exports\EstadisticasRXExport;
+use App\Exports\DMO\EstadisticasDMOExport, App\Exports\MMO\EstadisticasMAMOExport, App\Exports\USG\EstadisticasUSGExport, App\Exports\RX\EstadisticasRXExport;
 
 class ReportController extends Controller
 {
@@ -230,24 +230,27 @@ class ReportController extends Controller
         $month_in= getMonths(null, $mes);
         $year = $request->get('year_usg');
 
-        /*$conteo_pacientes_hosp = DB::table('details_appointments')
-            ->select(
-                DB::raw('Day(appointments.date) AS dia'), 
-                DB::raw('services.id AS idservicio'), 
-                DB::raw('services.name AS servicio'),  
-                DB::raw('COUNT(DISTINCT appointments.patient_id) AS total_pacientes'))
-            ->join('appointments', 'appointments.id', '=', 'details_appointments.idappointment')
-            ->join('services', 'services.id', '=', 'details_appointments.idservice')
-            ->whereDay('appointments.date', 2)
-            ->whereMonth('appointments.date', 2)
-            ->whereYear('appointments.date', 2023)
-            ->where('appointments.area', 2) 
-            ->where('appointments.status', 3)
-            ->where('services.parent_id', 1)
-            ->groupBy(DB::raw('Day(appointments.date)'), DB::raw('services.id'))            
-            ->get();
-            
-        return $conteo_pacientes_hosp;*/
+        /*$servicios = Service::where('status', 1);
+
+        $datos = DB::table('details_appointments')
+                        ->select(
+                            DB::raw('Day(appointments.date) AS dia'),
+                            'services.id AS idservicio',
+                            DB::raw('COUNT(appointments.patient_id) AS total_pacientes')
+                        )
+                        ->join('appointments', 'appointments.id', '=', 'details_appointments.idappointment')
+                        ->join('services', 'services.id', '=', 'details_appointments.idservice')
+                        ->whereMonth('appointments.date', $mes)
+                        ->whereYear('appointments.date', $year)
+                        ->where('appointments.status', 3)
+                        ->where('appointments.area', 2)
+                        ->where('services.status', 1) // <--- Refuerzo de status = 1 en el join
+                        ->whereIn('services.id', $servicios->pluck('id'))
+                        ->groupBy('dia', 'idservicio')
+                        ->get()
+                        ->groupBy('idservicio');
+
+        return $datos;*/
 
         $b = new Bitacora;
         $b->action = "Generación de reporte mensual de USG del mes: ".$month_in.' - '.$year;
@@ -301,7 +304,8 @@ class ReportController extends Controller
         $month_in = getMonths(null, $mes);
         $year = $request->get('year_dmo');
 
-        /*$conteo_pacientes_coex = DB::table('details_appointments')
+        /*$servicios_coex = Service::where('parent_id', 2)->where('status', 1)->get();
+                $conteo_pacientes_coex = DB::table('details_appointments')
                     ->select(
                         DB::raw('Day(appointments.date) AS dia'), 
                         DB::raw('services.id AS idservicio'), 
@@ -314,14 +318,14 @@ class ReportController extends Controller
                     ->where('appointments.area', 4)
                     ->where('appointments.status', 3)
                     ->where('services.parent_id', 2)
+                    ->where('services.status', 1)
                     ->groupBy(DB::raw('Day(appointments.date)'), DB::raw('services.id'))
                     ->get();
 
         return $conteo_pacientes_coex;*/
-         
-       /* $consulta_prueba = Service::where('parent_id', 2)->count();
 
-        return $consulta_prueba;*/
+
+        
 
         $b = new Bitacora;
         $b->action = "Generación de reporte mensual de DMO del mes: ".$month_in.' - '.$year;
